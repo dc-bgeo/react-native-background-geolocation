@@ -78,7 +78,7 @@
     "type": "git",
     "url": "git+https://github.com/dc-bgeo/react-native-background-geolocation.git"
   },
-  "homepage": "https://github.com/dc-bgeo/react-native-background-geolocation#readme",
+  "homepage": "https://bgeo.dev/",
   "bugs": {
     "url": "https://github.com/dc-bgeo/react-native-background-geolocation/issues"
   },
