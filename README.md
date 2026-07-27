@@ -1,6 +1,6 @@
 # @dc-bgeo/react-native-background-geolocation
 
-**Background geolocation for React Native that keeps tracking when the app is
+**Background geolocation for React Native & Expo that keeps tracking when the app is
 backgrounded, killed, force-quit, or rebooted.** iOS & Android, New Architecture
 (TurboModule), with a native offline queue and HTTP uploader — no JavaScript
 runs in the background.
