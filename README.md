@@ -7,6 +7,11 @@ runs in the background.
 
 ![BGeo — live device track in the web console](https://raw.githubusercontent.com/dc-bgeo/react-native-background-geolocation/main/preview.png)
 
+**Fully functional in DEBUG builds — no license required. Try before you buy.**
+Every feature works unlicensed in debug builds, so you can evaluate the engine on
+a real device route before paying for anything. A key is only needed for release
+builds.
+
 ## Why this one
 
 - **It survives.** iOS uses the modern session engine (`CLBackgroundActivitySession`
@@ -53,6 +58,7 @@ the default target; the console is opt-in.
 
 - React Native **≥ 0.76** (New Architecture only)
 - iOS **≥ 15.5**, Android **minSdk 24**
+- Expo **SDK 54+** via the bundled config plugin (development build — not Expo Go)
 
 ## Install
 
@@ -89,6 +95,62 @@ cd ios && pod install
 Add `NSLocationAlwaysAndWhenInUseUsageDescription`, `NSMotionUsageDescription`,
 and the `location` background mode (`UIBackgroundModes`) to your `Info.plist`.
 
+### Expo
+
+Everything above is written for you by the bundled config plugin — add it to
+`app.json` and run `npx expo prebuild`:
+
+```json
+{
+  "expo": {
+    "plugins": [
+      ["@dc-bgeo/react-native-background-geolocation", {
+        "licenseKey": "BGEO1….YOUR_KEY",
+        "locationAlwaysAndWhenInUsePermission": "Keep tracking your route while the app is closed.",
+        "motionPermission": "Detect when you start and stop moving.",
+        "fullAccuracyPurpose": "Precise location is required to track your route accurately."
+      }]
+    ]
+  }
+}
+```
+
+| Option | Default | Effect |
+| --- | --- | --- |
+| `licenseKey` | — | `BGeoLicense` (Info.plist) + `com.bgeo.license` meta-data (manifest) |
+| `locationWhenInUsePermission` | generic string | `NSLocationWhenInUseUsageDescription` |
+| `locationAlwaysAndWhenInUsePermission` | generic string | `NSLocationAlwaysAndWhenInUseUsageDescription` |
+| `motionPermission` | generic string | `NSMotionUsageDescription` |
+| `fullAccuracyPurpose` | unset | `DeliverFullAccuracy` — required for `requestTemporaryFullAccuracy()` |
+| `isIosBackgroundFetchEnabled` | `false` | adds `fetch` to `UIBackgroundModes` (`location` is always added) |
+| `isAndroidBackgroundLocationEnabled` | `true` | `ACCESS_BACKGROUND_LOCATION` |
+
+The plugin also points the generated `android/build.gradle` at the engine's local
+Maven repo. Every other Android permission, service and receiver merges in from the
+engine AAR — nothing else to declare.
+
+Omit `licenseKey` while evaluating. The unlicensed evaluation path applies when no
+key is present; a *malformed* key is rejected as `LICENSE_INVALID` even on the
+simulator, so a placeholder value in `app.json` will block `ready()` in development.
+
+Requires **Expo SDK 54+** and a development build: this is custom native code, so
+**Expo Go cannot run it**. Use `npx expo run:ios` / `npx expo run:android`, or
+`eas build --profile development`.
+
+Android headless tasks need `registerHeadlessTask` to run at module scope of the
+entry file, before React renders. With Expo Router, point `main` at your own entry:
+
+```js
+// index.js  →  "main": "index.js" in package.json
+import BackgroundGeolocation from '@dc-bgeo/react-native-background-geolocation';
+
+BackgroundGeolocation.registerHeadlessTask(async (event) => {
+  console.log('[headless]', event.name, event.params);
+});
+
+import 'expo-router/entry';
+```
+
 ## Usage
 
 ```ts
@@ -110,7 +172,8 @@ await BackgroundGeolocation.requestPermission();
 await BackgroundGeolocation.start();
 ```
 
-Debuggable builds and the iOS simulator run without a license key (evaluation).
+That is the whole integration. Debug builds run without a license key — the SDK
+is fully functional in DEBUG, no key, no trial period, no feature gates.
 
 A runnable console app lives in [`example/`](./example) — settings screen for
 every config key, live map, log viewer, geofence editor.
