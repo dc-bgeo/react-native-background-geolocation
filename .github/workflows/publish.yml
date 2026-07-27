@@ -1,0 +1,34 @@
+name: Publish to npm
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write # required for OIDC trusted publishing
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          registry-url: 'https://registry.npmjs.org'
+          package-manager-cache: false
+
+      # Trusted publishing needs npm >= 11.5.1; Node 22 ships npm 10.x.
+      - run: npm install -g npm@latest
+
+      # No lockfile in this repo, so `npm ci` is not usable.
+      - run: npm install
+
+      - run: npm run typecheck
+
+      # No NPM_TOKEN: OIDC authenticates the run, and npm attaches
+      # provenance automatically. `prepack` runs `bob build`.
+      - run: npm publish --access public
