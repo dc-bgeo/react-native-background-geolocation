@@ -3,7 +3,7 @@
  * which persists it in bgeo.db and uploads batches to /device/logs with the
  * engine's own auth — surviving app kills, unlike the old JS buffer. */
 
-import BackgroundGeolocation from '@bgeo/react-native-background-geolocation';
+import BackgroundGeolocation from '@dc-bgeo/react-native-background-geolocation';
 
 import {appStore, type LogLevel} from './appStore';
 

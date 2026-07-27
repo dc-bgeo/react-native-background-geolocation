@@ -2,7 +2,7 @@
  * (the device is the source of truth). Call after every CRUD operation and on
  * onGeofencesChange. */
 
-import BackgroundGeolocation from '@bgeo/react-native-background-geolocation';
+import BackgroundGeolocation from '@dc-bgeo/react-native-background-geolocation';
 
 import {appStore} from './appStore';
 import {putGeofences} from './deviceLink';

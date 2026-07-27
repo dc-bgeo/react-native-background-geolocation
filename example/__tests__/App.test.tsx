@@ -9,7 +9,7 @@ import ReactTestRenderer from 'react-test-renderer';
 // (TurboModuleRegistry.getEnforcing), which does not exist in the jest host —
 // mock the whole JS facade.
 const subscription = () => ({remove: jest.fn()});
-jest.mock('@bgeo/react-native-background-geolocation', () => ({
+jest.mock('@dc-bgeo/react-native-background-geolocation', () => ({
   __esModule: true,
   default: {
     ready: jest.fn(() => Promise.resolve({enabled: false, odometer: 0})),

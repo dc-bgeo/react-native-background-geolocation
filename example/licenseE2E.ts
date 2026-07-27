@@ -8,7 +8,7 @@
 // The example ships a valid prod token in its AndroidManifest, so in a release
 // build (DEBUG=false) ready() must resolve. Baseline without a manifest token is
 // LICENSE_MISSING. Grep logs for "[MANIFEST]".
-import BackgroundGeolocation from '@bgeo/react-native-background-geolocation';
+import BackgroundGeolocation from '@dc-bgeo/react-native-background-geolocation';
 
 export async function runManifestCheck(onLine?: (s: string) => void): Promise<void> {
   const log = (s: string) => {

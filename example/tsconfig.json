@@ -6,7 +6,7 @@
     // node_modules of its own — resolve react/react-native here.
     "baseUrl": ".",
     "paths": {
-      "react-native": ["./node_modules/react-native"], "@bgeo/react-native-background-geolocation": ["../src"],
+      "react-native": ["./node_modules/react-native"], "@dc-bgeo/react-native-background-geolocation": ["../src"],
       "react-native/*": ["./node_modules/react-native/*"]
     }
   },

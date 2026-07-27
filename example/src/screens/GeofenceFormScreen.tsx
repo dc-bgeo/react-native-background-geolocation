@@ -4,7 +4,7 @@
 
 import React, {useState} from 'react';
 import {TouchableOpacity, ScrollView, Switch, Text, TextInput, View} from 'react-native';
-import BackgroundGeolocation from '@bgeo/react-native-background-geolocation';
+import BackgroundGeolocation from '@dc-bgeo/react-native-background-geolocation';
 
 import {appStore} from '../appStore';
 import {syncGeofences} from '../geofences';

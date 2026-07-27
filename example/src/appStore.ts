@@ -3,7 +3,7 @@
  * the SDK geofence set, engine status and the device-link state. State is
  * replaced immutably so useSyncExternalStore snapshots change by reference. */
 
-import type {Geofence} from '@bgeo/react-native-background-geolocation';
+import type {Geofence} from '@dc-bgeo/react-native-background-geolocation';
 
 export type LogLevel = 'verbose' | 'debug' | 'info' | 'warn' | 'error';
 

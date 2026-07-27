@@ -1,4 +1,4 @@
-# @bgeo/react-native-background-geolocation
+# @dc-bgeo/react-native-background-geolocation
 
 Reliable background geolocation for React Native — iOS & Android, New
 Architecture (TurboModule), native offline HTTP upload, motion-based tracking
@@ -16,7 +16,7 @@ release builds — see [LICENSE.md](./LICENSE.md).
 ## Install
 
 ```sh
-npm install @bgeo/react-native-background-geolocation
+npm install @dc-bgeo/react-native-background-geolocation
 ```
 
 ### Android
@@ -27,7 +27,7 @@ Add it to your project's `android/build.gradle`:
 ```gradle
 allprojects {
   repositories {
-    maven { url("$rootDir/../node_modules/@bgeo/react-native-background-geolocation/android/libs") }
+    maven { url("$rootDir/../node_modules/@dc-bgeo/react-native-background-geolocation/android/libs") }
   }
 }
 ```
@@ -51,7 +51,7 @@ and the `location` background mode (`UIBackgroundModes`) to your `Info.plist`.
 ## Usage
 
 ```ts
-import BackgroundGeolocation from '@bgeo/react-native-background-geolocation';
+import BackgroundGeolocation from '@dc-bgeo/react-native-background-geolocation';
 
 const sub = BackgroundGeolocation.onLocation(location => {
   console.log('[location]', location.coords);

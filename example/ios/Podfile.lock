@@ -2207,7 +2207,7 @@ DEPENDENCIES:
   - ReactCodegen (from `build/generated/ios/ReactCodegen`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - ReactNativeDependencies (from `../node_modules/react-native/third-party-podspecs/ReactNativeDependencies.podspec`)
-  - "RNBackgroundGeolocation (from `../node_modules/@bgeo/react-native-background-geolocation`)"
+  - "RNBackgroundGeolocation (from `../node_modules/@dc-bgeo/react-native-background-geolocation`)"
   - "RNDateTimePicker (from `../node_modules/@react-native-community/datetimepicker`)"
   - RNScreens (from `../node_modules/react-native-screens`)
   - RNSVG (from `../node_modules/react-native-svg`)
@@ -2375,7 +2375,7 @@ EXTERNAL SOURCES:
   ReactNativeDependencies:
     :podspec: "../node_modules/react-native/third-party-podspecs/ReactNativeDependencies.podspec"
   RNBackgroundGeolocation:
-    :path: "../node_modules/@bgeo/react-native-background-geolocation"
+    :path: "../node_modules/@dc-bgeo/react-native-background-geolocation"
   RNDateTimePicker:
     :path: "../node_modules/@react-native-community/datetimepicker"
   RNScreens:

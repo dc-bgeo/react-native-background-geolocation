@@ -10,7 +10,7 @@ jest.mock('@react-native-async-storage/async-storage', () => ({
     removeItem: jest.fn(async () => undefined),
   },
 }));
-jest.mock('@bgeo/react-native-background-geolocation', () => ({
+jest.mock('@dc-bgeo/react-native-background-geolocation', () => ({
   __esModule: true,
   default: {setConfig: jest.fn(() => Promise.resolve({}))},
 }));

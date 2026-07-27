@@ -24,6 +24,6 @@ allprojects {
     repositories {
         // Closed engine AAR shipped inside the react-native-background-geolocation
         // npm package (required install step, same pattern as Transistorsoft).
-        maven { url("${rootDir}/../node_modules/@bgeo/react-native-background-geolocation/android/libs") }
+        maven { url("${rootDir}/../node_modules/@dc-bgeo/react-native-background-geolocation/android/libs") }
     }
 }

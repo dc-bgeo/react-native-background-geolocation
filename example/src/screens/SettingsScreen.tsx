@@ -13,7 +13,7 @@ import {
   View,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import BackgroundGeolocation from '@bgeo/react-native-background-geolocation';
+import BackgroundGeolocation from '@dc-bgeo/react-native-background-geolocation';
 
 import {appStore} from '../appStore';
 import {CONFIG_SECTIONS, type ConfigField} from '../configSchema';

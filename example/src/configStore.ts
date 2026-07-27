@@ -2,7 +2,7 @@
  * are applied immediately via setConfig and merged over BASE_CONFIG at boot. */
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import BackgroundGeolocation from '@bgeo/react-native-background-geolocation';
+import BackgroundGeolocation from '@dc-bgeo/react-native-background-geolocation';
 
 import {CONFIG_SECTIONS, defaultFor} from './configSchema';
 

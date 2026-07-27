@@ -8,7 +8,7 @@ import MapView, {Circle, Marker, Polyline} from 'react-native-maps';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useNavigation} from '@react-navigation/native';
 import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import BackgroundGeolocation from '@bgeo/react-native-background-geolocation';
+import BackgroundGeolocation from '@dc-bgeo/react-native-background-geolocation';
 
 import {appStore, type Point} from '../appStore';
 import {Chevron} from '../components/Chevron';

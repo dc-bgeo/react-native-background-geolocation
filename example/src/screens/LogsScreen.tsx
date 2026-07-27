@@ -7,7 +7,7 @@
 import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {FlatList, TouchableOpacity, Text, View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import BackgroundGeolocation, {type LogEntry} from '@bgeo/react-native-background-geolocation';
+import BackgroundGeolocation, {type LogEntry} from '@dc-bgeo/react-native-background-geolocation';
 
 import {appStore, type LogLine} from '../appStore';
 import {MONO, themedStyles, useTheme, type ThemeColors} from '../theme';

@@ -3,7 +3,7 @@
  * (foregroundService, backgroundPermissionRationale) are excluded.
  * `default` is the effective engine/app default shown when no override is set. */
 
-import type {Config} from '@bgeo/react-native-background-geolocation';
+import type {Config} from '@dc-bgeo/react-native-background-geolocation';
 
 export type ConfigField = {
   key: string;

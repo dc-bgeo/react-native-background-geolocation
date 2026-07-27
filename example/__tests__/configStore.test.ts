@@ -14,13 +14,13 @@ jest.mock('@react-native-async-storage/async-storage', () => {
     },
   };
 });
-jest.mock('@bgeo/react-native-background-geolocation', () => ({
+jest.mock('@dc-bgeo/react-native-background-geolocation', () => ({
   __esModule: true,
   default: {setConfig: jest.fn(() => Promise.resolve({}))},
 }));
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import BackgroundGeolocation from '@bgeo/react-native-background-geolocation';
+import BackgroundGeolocation from '@dc-bgeo/react-native-background-geolocation';
 
 import {applyOverride, expandOverrides, loadOverrides, resetOverrides} from '../src/configStore';
 import {BASE_CONFIG} from '../src/configSchema';
