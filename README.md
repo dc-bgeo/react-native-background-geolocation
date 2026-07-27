@@ -129,10 +129,6 @@ The plugin also points the generated `android/build.gradle` at the engine's loca
 Maven repo. Every other Android permission, service and receiver merges in from the
 engine AAR — nothing else to declare.
 
-Omit `licenseKey` while evaluating. The unlicensed evaluation path applies when no
-key is present; a *malformed* key is rejected as `LICENSE_INVALID` even on the
-simulator, so a placeholder value in `app.json` will block `ready()` in development.
-
 Requires **Expo SDK 54+** and a development build: this is custom native code, so
 **Expo Go cannot run it**. Use `npx expo run:ios` / `npx expo run:android`, or
 `eas build --profile development`.
