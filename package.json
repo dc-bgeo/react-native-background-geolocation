@@ -74,6 +74,14 @@
     ]
   },
   "license": "SEE LICENSE IN LICENSE.md",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dc-bgeo/react-native-background-geolocation.git"
+  },
+  "homepage": "https://github.com/dc-bgeo/react-native-background-geolocation#readme",
+  "bugs": {
+    "url": "https://github.com/dc-bgeo/react-native-background-geolocation/issues"
+  },
   "keywords": [
     "react-native",
     "geolocation",
