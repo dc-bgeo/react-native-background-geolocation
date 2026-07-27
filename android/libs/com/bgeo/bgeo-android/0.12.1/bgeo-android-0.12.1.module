@@ -1,0 +1,111 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "com.bgeo",
+    "module": "bgeo-android",
+    "version": "0.12.1",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "9.3.1"
+    }
+  },
+  "variants": [
+    {
+      "name": "releaseVariantReleaseApiPublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-api"
+      },
+      "dependencies": [
+        {
+          "group": "com.google.android.gms",
+          "module": "play-services-location",
+          "version": {
+            "requires": "21.3.0"
+          }
+        },
+        {
+          "group": "com.squareup.okhttp3",
+          "module": "okhttp",
+          "version": {
+            "requires": "4.12.0"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.1.20"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "bgeo-android-0.12.1.aar",
+          "url": "bgeo-android-0.12.1.aar",
+          "size": 317676,
+          "sha512": "e7f4510f3174fdefbc3745df9865d62d3123e240ff9cad35dadadff8c2c95f9bcef6c57960105d3c21f8a69ce153e858bc66a13e66574cf45671d8f8b3bbab59",
+          "sha256": "36e15c1fe3ee47fe63c551d91f386728759aad8a82a093126e157e7039e0ff6c",
+          "sha1": "686c7c3a308560957c3466faf1a21c44295bab35",
+          "md5": "80bf17eb1a4cec6f9a61026249c29fbf"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseRuntimePublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.core",
+          "module": "core-ktx",
+          "version": {
+            "requires": "1.13.1"
+          }
+        },
+        {
+          "group": "com.google.android.gms",
+          "module": "play-services-location",
+          "version": {
+            "requires": "21.3.0"
+          }
+        },
+        {
+          "group": "com.squareup.okhttp3",
+          "module": "okhttp",
+          "version": {
+            "requires": "4.12.0"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.1.20"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "bgeo-android-0.12.1.aar",
+          "url": "bgeo-android-0.12.1.aar",
+          "size": 317676,
+          "sha512": "e7f4510f3174fdefbc3745df9865d62d3123e240ff9cad35dadadff8c2c95f9bcef6c57960105d3c21f8a69ce153e858bc66a13e66574cf45671d8f8b3bbab59",
+          "sha256": "36e15c1fe3ee47fe63c551d91f386728759aad8a82a093126e157e7039e0ff6c",
+          "sha1": "686c7c3a308560957c3466faf1a21c44295bab35",
+          "md5": "80bf17eb1a4cec6f9a61026249c29fbf"
+        }
+      ]
+    }
+  ]
+}

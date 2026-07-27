@@ -1,0 +1,15 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "baseUrl": ".",
+    "paths": {
+      "react": ["./example/node_modules/react"],
+      "react-native": ["./example/node_modules/react-native"],
+      "react-native/*": ["./example/node_modules/react-native/*"]
+    }
+  },
+  "include": ["src"]
+}

@@ -1,0 +1,41 @@
+node_modules/
+lib/
+android/build/
+android/.gradle/
+ios/build/
+*.log
+.DS_Store
+local.properties
+
+# IDE / editor state (local paths, run configs, tokens)
+.idea/
+*.iml
+xcuserdata/
+*.xcuserstate
+
+# example app build output
+Pods/
+example/android/.gradle/
+example/android/build/
+example/android/app/build/
+example/ios/build/
+
+# local env overrides
+.env
+.env.local
+.env.*.local
+.xcode.env.local
+
+# signing material / credentials — never publish
+*.jks
+*.keystore
+!example/android/app/debug.keystore
+*.p8
+*.p12
+*.mobileprovision
+*.cer
+google-services.json
+GoogleService-Info.plist
+
+# npm pack artifacts
+*.tgz

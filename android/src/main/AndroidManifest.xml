@@ -1,0 +1,17 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <application>
+        <!-- Headless sink for engine events in processes where RN never loads
+             (boot / geofence restart): the engine instantiates this class by
+             reflection when no dispatcher was registered programmatically. -->
+        <meta-data
+            android:name="com.bgeo.HEADLESS_DISPATCHER"
+            android:value="com.bgeo.rn.RNHeadlessDispatcher" />
+
+        <!-- Runs the registered JS task when the app is killed but tracking continues. -->
+        <service
+            android:name="com.bgeo.rn.HeadlessTaskService"
+            android:exported="false" />
+    </application>
+
+</manifest>
