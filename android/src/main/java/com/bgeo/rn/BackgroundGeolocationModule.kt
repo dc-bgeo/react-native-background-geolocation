@@ -382,12 +382,16 @@ class BackgroundGeolocationModule(reactContext: ReactApplicationContext) :
   // NOTE: `override` is added in the TS-surface task once codegen regenerates
   // the spec with the four logger methods.
 
-  override fun log(level: Double, event: String, message: String, dataJson: String, promise: Promise) {
+  override fun log(
+    level: Double, event: String, message: String, dataJson: String, tag: String, promise: Promise,
+  ) {
     BGGeoLogger.log(
       level = level.toInt(),
       event = event.ifEmpty { "app" },
       message = message.ifEmpty { null },
       data = dataJson.ifEmpty { null },
+      // Logcat category only (engine default "BGGeo"): not persisted, never uploaded.
+      tag = tag.ifEmpty { "BGGeo" },
       src = "js",
     )
     promise.resolve(null)

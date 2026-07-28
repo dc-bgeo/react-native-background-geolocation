@@ -297,9 +297,14 @@ RCT_EXPORT_MODULE()
       event:(NSString *)event
     message:(NSString *)message
    dataJson:(NSString *)dataJson
+        tag:(NSString *)tag
     resolve:(RCTPromiseResolveBlock)resolve
      reject:(RCTPromiseRejectBlock)reject
 {
+  // `tag` is the Android logcat category — the iOS engine's BGGeoLogger has no
+  // such parameter (os_log carries its own subsystem/category), so it is
+  // accepted for a single JS surface and deliberately ignored here.
+  (void)tag;
   [BGGeoLogger log:(NSInteger)level
              event:(event.length ? event : @"app")
            message:(message.length ? message : nil)

@@ -58,7 +58,8 @@ export interface Spec extends TurboModule {
   getAuthState(): Promise<UnsafeObject>; // { accessToken, refreshToken }
 
   // ---- logger -------------------------------------------------------------
-  log(level: Double, event: string, message: string, dataJson: string): Promise<void>;
+  // `tag` is the Android logcat category ('' = engine default "BGGeo"); ignored on iOS.
+  log(level: Double, event: string, message: string, dataJson: string, tag: string): Promise<void>;
   getLog(limit: Double): Promise<UnsafeObject>; // { entries: LogEntry[] } newest-first
   destroyLog(): Promise<Int32>; // rows removed
   uploadLog(): Promise<Int32>; // rows handed to the flusher

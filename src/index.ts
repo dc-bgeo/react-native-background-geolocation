@@ -51,9 +51,11 @@ function toErrorCode(error: any): number {
 }
 
 // App-side log lines ride the same native queue as engine logs (src:"js").
-function logWrite(level: number, message: string, data?: object): Promise<void> {
+// `tag` is the Android logcat category only ('' = engine default "BGGeo") — it is
+// not persisted and never reaches the server; iOS ignores it.
+function logWrite(level: number, message: string, data?: object, tag?: string): Promise<void> {
   return NativeBackgroundGeolocation.log(
-    level, 'app', message, data ? JSON.stringify(data) : '',
+    level, 'app', message, data ? JSON.stringify(data) : '', tag ?? '',
   ).catch(() => {}); // logging must never throw into app code
 }
 
@@ -276,13 +278,18 @@ const BackgroundGeolocation = {
   },
 
   // ---- logger -------------------------------------------------------------
-  /** App log lines persisted in bgeo.db and uploaded with the engine's own auth. */
+  /**
+   * App log lines persisted in bgeo.db and uploaded with the engine's own auth.
+   * The optional `tag` sets the ANDROID logcat category for the line
+   * (`adb logcat -s MyTag`); it is not persisted, never uploaded, and ignored on
+   * iOS. Omitted/empty means the engine default "BGGeo".
+   */
   logger: {
-    error: (message: string, data?: object) => logWrite(1, message, data),
-    warn: (message: string, data?: object) => logWrite(2, message, data),
-    info: (message: string, data?: object) => logWrite(3, message, data),
-    debug: (message: string, data?: object) => logWrite(4, message, data),
-    verbose: (message: string, data?: object) => logWrite(5, message, data),
+    error: (message: string, data?: object, tag?: string) => logWrite(1, message, data, tag),
+    warn: (message: string, data?: object, tag?: string) => logWrite(2, message, data, tag),
+    info: (message: string, data?: object, tag?: string) => logWrite(3, message, data, tag),
+    debug: (message: string, data?: object, tag?: string) => logWrite(4, message, data, tag),
+    verbose: (message: string, data?: object, tag?: string) => logWrite(5, message, data, tag),
   },
 
   /** Newest-first persisted log entries. */
