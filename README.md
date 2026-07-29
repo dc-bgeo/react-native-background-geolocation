@@ -226,4 +226,4 @@ Dual-licensed, see [LICENSE.md](./LICENSE.md):
 - **Bridge** — MIT © BGeo (`src`, `lib`, `android/src`, `ios/RNBackgroundGeolocation.{h,mm}`,
   podspec, gradle glue).
 - **Engine binaries** — proprietary (`ios/BGeoCore.xcframework`, the
-  `com.bgeo:bgeo-android` AAR); a license key is required in release builds.
+  `dev.bgeo:bgeo-android` AAR); a license key is required in release builds.

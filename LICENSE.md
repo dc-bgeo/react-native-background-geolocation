@@ -7,7 +7,7 @@ This package is licensed in two parts:
 | Part | Files | License |
 | --- | --- | --- |
 | **Bridge** (open) | `src/`, `lib/`, `android/src/`, `android/build.gradle`, `ios/RNBackgroundGeolocation.{h,mm}`, `RNBackgroundGeolocation.podspec`, `react-native.config.js` | MIT — Part A |
-| **Binaries** (closed) | `ios/BGeoCore.xcframework`, `android/libs/` (the `com.bgeo:bgeo-android` AAR) | Proprietary — Part B |
+| **Binaries** (closed) | `ios/BGeoCore.xcframework`, `android/libs/` (the `dev.bgeo:bgeo-android` AAR) | Proprietary — Part B |
 
 Because the package as distributed contains both, its npm `license` field is
 `SEE LICENSE IN LICENSE.md` rather than `MIT`.
@@ -47,7 +47,7 @@ function without them.
 Copyright (c) 2026 BGeo. All rights reserved.
 
 This Part governs the closed-source binary components: the
-`BGeoCore.xcframework` for iOS and the `com.bgeo:bgeo-android` AAR under
+`BGeoCore.xcframework` for iOS and the `dev.bgeo:bgeo-android` AAR under
 `android/libs` (collectively the "Binaries").
 
 ### 1. Grant
