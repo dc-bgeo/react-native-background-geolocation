@@ -1,6 +1,6 @@
 {
   "name": "@dc-bgeo/react-native-background-geolocation",
-  "version": "0.4.8",
+  "version": "0.4.9",
   "description": "Reliable background geolocation for React Native (iOS & Android) — New Architecture, native HTTP upload, motion-based tracking.",
   "main": "lib/commonjs/index.js",
   "module": "lib/module/index.js",
