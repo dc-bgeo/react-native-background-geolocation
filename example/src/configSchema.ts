@@ -39,6 +39,12 @@ const ACCURACY_OPTIONS = [
   {label: 'V.LOW', value: 1000},
 ];
 
+const STATIONARY_ACCURACY_OPTIONS = [
+  {label: 'HIGH', value: 'HIGH'},
+  {label: 'BAL', value: 'BALANCED'},
+  {label: 'LOW', value: 'LOW'},
+];
+
 export const CONFIG_SECTIONS: ConfigSection[] = [
   {
     title: 'Geolocation',
@@ -47,7 +53,7 @@ export const CONFIG_SECTIONS: ConfigSection[] = [
       {key: 'distanceFilter', label: 'Distance filter', type: 'number', unit: 'm', default: 10},
       {key: 'stationaryRadius', label: 'Stationary radius', type: 'number', unit: 'm', default: 25},
       {key: 'stationaryDistanceFilter', label: 'Stationary distance filter', type: 'number', unit: 'm', default: 75},
-      {key: 'stationaryDesiredAccuracy', label: 'Stationary accuracy', type: 'enum', options: ACCURACY_OPTIONS, default: 10},
+      {key: 'stationaryDesiredAccuracy', label: 'Stationary accuracy', type: 'enum', options: STATIONARY_ACCURACY_OPTIONS, default: 'BALANCED'},
       {key: 'stationaryKeepAlive', label: 'Stationary keep-alive', type: 'bool', default: true},
       {key: 'locationUpdateInterval', label: 'Moving interval', type: 'number', unit: 'ms', default: 1000, platform: 'android'},
       {key: 'showsBackgroundLocationIndicator', label: 'BG location indicator', type: 'bool', default: false, platform: 'ios'},
