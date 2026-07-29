@@ -38,7 +38,15 @@ export interface Location {
   coords: Coords;
   activity: MotionActivity;
   battery: Battery;
-  is_moving: boolean;
+  /**
+   * `null` while a cold-started session's first fixes are still in the
+   * "unconfirmed MOVING" probing window — up to `stopTimeout` minutes
+   * (default 5) after `start()`. The engine sends `NSNull` here by design so
+   * the server falls back to speed rather than a phantom "started moving"
+   * being fabricated (`core/ios/Sources/BGGeoEngine.mm:2826`). Treat `null`
+   * the same as `false`.
+   */
+  is_moving: boolean | null;
   sample?: boolean;
   event?: string;
   /** Arbitrary passthrough — the app sets { heartBeat | watch | getCurrentPosition }. */
