@@ -64,5 +64,5 @@ dependencies {
 
     // Closed-source engine (FusedLocation, motion machine, HTTP queue). Its POM
     // pulls play-services-location + okhttp transitively.
-    api "com.bgeo:bgeo-android:0.12.1"
+    api "dev.bgeo:bgeo-android:0.13.0"
 }
