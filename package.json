@@ -85,10 +85,14 @@
   },
   "keywords": [
     "react-native",
+    "ios",
+    "android",
     "geolocation",
     "background",
     "location",
+    "geofence",
     "gps",
-    "tracking"
+    "tracking",
+    "geofencing"
   ]
 }
