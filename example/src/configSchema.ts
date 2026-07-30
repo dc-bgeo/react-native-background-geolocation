@@ -3,7 +3,14 @@
  * (foregroundService, backgroundPermissionRationale) are excluded.
  * `default` is the effective engine/app default shown when no override is set. */
 
+import {Platform} from 'react-native';
 import type {Config} from '@dc-bgeo/react-native-background-geolocation';
+
+/** A default that differs between the iOS and Android engines — see
+ * `resolveDefault`. Use only when the two engines' own literal fallbacks
+ * genuinely disagree (rare: `minimumActivityRecognitionConfidence` below is
+ * currently the one known case). Most fields keep a single `default`. */
+export type PlatformDefault = {ios: boolean | number | string; android: boolean | number | string};
 
 export type ConfigField = {
   key: string;
@@ -11,11 +18,27 @@ export type ConfigField = {
   type: 'bool' | 'number' | 'enum' | 'string';
   /** enum choices */
   options?: {label: string; value: number | string}[];
-  default: boolean | number | string | null;
+  default: boolean | number | string | null | PlatformDefault;
   unit?: string;
   platform?: 'ios' | 'android';
   hint?: string;
 };
+
+function isPlatformDefault(value: unknown): value is PlatformDefault {
+  return typeof value === 'object' && value !== null && 'ios' in value && 'android' in value;
+}
+
+/** Resolves a field's `default` (single value, or a per-platform pair) for
+ * one platform. `os` is an explicit parameter rather than reading
+ * `Platform.OS` internally, so this stays a pure function — unit-testable
+ * for both platforms from a single Jest run, no react-native Platform
+ * mocking needed. Production call sites omit it and get the current device. */
+export function resolveDefault(
+  value: ConfigField['default'],
+  os: 'ios' | 'android' = Platform.OS as 'ios' | 'android',
+): boolean | number | string | null {
+  return isPlatformDefault(value) ? value[os] : value;
+}
 
 export type ConfigSection = {title: string; fields: ConfigField[]};
 
@@ -51,7 +74,7 @@ export const CONFIG_SECTIONS: ConfigSection[] = [
     fields: [
       {key: 'desiredAccuracy', label: 'Desired accuracy', type: 'enum', options: ACCURACY_OPTIONS, default: -1},
       {key: 'distanceFilter', label: 'Distance filter', type: 'number', unit: 'm', default: 10},
-      // CORRECTED — engine default 200 on both platforms (core/ios/Sources/BGGeoEngine.mm:793,
+      // CORRECTED — engine default 200 on both platforms (core/ios/Sources/BGGeoEngine.mm:809,
       // core/android/.../BGGeoEngine.kt:636), not 25.
       {key: 'stationaryRadius', label: 'Stationary radius', type: 'number', unit: 'm', default: 200},
       {key: 'stationaryDistanceFilter', label: 'Stationary distance filter', type: 'number', unit: 'm', default: 75},
@@ -80,16 +103,12 @@ export const CONFIG_SECTIONS: ConfigSection[] = [
     fields: [
       {key: 'stopTimeout', label: 'Stop timeout', type: 'number', unit: 'min', default: 5},
       {key: 'motionTriggerDelay', label: 'Motion trigger delay', type: 'number', unit: 'ms', default: 0},
-      // CORRECTED, WITH A KNOWN CROSS-PLATFORM DIVERGENCE — iOS engine default is 50
-      // (core/ios/Sources/BGGeoEngine.mm:1556, deliberate: iOS's confidence scale is coarse
-      // Low/Med/High=33/66/100, and 50 preserves "anything above Low counts as moving");
-      // Android engine default is 75 (core/android/.../BGGeoEngine.kt:870). This schema has
-      // no per-platform default mechanism, so one number must serve both — using iOS's 50
-      // here (matches iOS exactly; on Android it's a more permissive threshold than Android's
-      // own 75, trading a slightly higher false-"moving" rate for a lower risk of missing real
-      // movement, consistent with this app's tracking-reliability priority). See the parity
-      // report for the full discussion.
-      {key: 'minimumActivityRecognitionConfidence', label: 'Min AR confidence', type: 'number', unit: '%', default: 50},
+      // DIVERGENT BY DESIGN — iOS engine default is 50 (core/ios/Sources/BGGeoEngine.mm:1576,
+      // deliberate: iOS's confidence scale is coarse Low/Med/High=33/66/100, and 50 preserves
+      // "anything above Low counts as moving"); Android engine default is 75
+      // (core/android/.../BGGeoEngine.kt:870). Resolved per platform via `resolveDefault` so
+      // each platform's Settings screen displays and resets to its OWN engine's real default.
+      {key: 'minimumActivityRecognitionConfidence', label: 'Min AR confidence', type: 'number', unit: '%', default: {ios: 50, android: 75}},
       {key: 'disableMotionActivityUpdates', label: 'Disable motion updates', type: 'bool', default: false},
       {key: 'preventSuspend', label: 'Prevent suspend', type: 'bool', default: false, platform: 'ios'},
     ],
@@ -190,14 +209,15 @@ export const CONFIG_SECTIONS: ConfigSection[] = [
   },
 ];
 
-/** default value per key (BASE_CONFIG wins over schema defaults). */
+/** default value per key (BASE_CONFIG wins over the schema's, possibly
+ * per-platform, default). */
 export function defaultFor(key: string): unknown {
   if (key in BASE_CONFIG) {
     return (BASE_CONFIG as Record<string, unknown>)[key];
   }
   for (const section of CONFIG_SECTIONS) {
     const field = section.fields.find(f => f.key === key);
-    if (field) return field.default;
+    if (field) return resolveDefault(field.default);
   }
   return undefined;
 }

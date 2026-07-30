@@ -16,7 +16,7 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import BackgroundGeolocation from '@dc-bgeo/react-native-background-geolocation';
 
 import {appStore} from '../appStore';
-import {CONFIG_SECTIONS, type ConfigField} from '../configSchema';
+import {CONFIG_SECTIONS, resolveDefault, type ConfigField} from '../configSchema';
 import {applyOverride, loadOverrides, resetOverrides} from '../configStore';
 import {linkDevice, unlinkDevice} from '../deviceLink';
 import {logEvent} from '../logUploader';
@@ -82,7 +82,7 @@ export function SettingsScreen() {
                 <FieldRow
                   key={field.key}
                   field={field}
-                  value={overrides[field.key] ?? field.default}
+                  value={overrides[field.key] ?? resolveDefault(field.default)}
                   overridden={field.key in overrides}
                   onChange={v => setValue(field.key, v)}
                 />
