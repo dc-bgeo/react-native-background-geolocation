@@ -51,7 +51,9 @@ export const CONFIG_SECTIONS: ConfigSection[] = [
     fields: [
       {key: 'desiredAccuracy', label: 'Desired accuracy', type: 'enum', options: ACCURACY_OPTIONS, default: -1},
       {key: 'distanceFilter', label: 'Distance filter', type: 'number', unit: 'm', default: 10},
-      {key: 'stationaryRadius', label: 'Stationary radius', type: 'number', unit: 'm', default: 25},
+      // CORRECTED — engine default 200 on both platforms (core/ios/Sources/BGGeoEngine.mm:793,
+      // core/android/.../BGGeoEngine.kt:636), not 25.
+      {key: 'stationaryRadius', label: 'Stationary radius', type: 'number', unit: 'm', default: 200},
       {key: 'stationaryDistanceFilter', label: 'Stationary distance filter', type: 'number', unit: 'm', default: 75},
       {key: 'stationaryDesiredAccuracy', label: 'Stationary accuracy', type: 'enum', options: STATIONARY_ACCURACY_OPTIONS, default: 'BALANCED'},
       {key: 'stationaryKeepAlive', label: 'Stationary keep-alive', type: 'bool', default: true},
@@ -78,7 +80,16 @@ export const CONFIG_SECTIONS: ConfigSection[] = [
     fields: [
       {key: 'stopTimeout', label: 'Stop timeout', type: 'number', unit: 'min', default: 5},
       {key: 'motionTriggerDelay', label: 'Motion trigger delay', type: 'number', unit: 'ms', default: 0},
-      {key: 'minimumActivityRecognitionConfidence', label: 'Min AR confidence', type: 'number', unit: '%', default: 75},
+      // CORRECTED, WITH A KNOWN CROSS-PLATFORM DIVERGENCE — iOS engine default is 50
+      // (core/ios/Sources/BGGeoEngine.mm:1556, deliberate: iOS's confidence scale is coarse
+      // Low/Med/High=33/66/100, and 50 preserves "anything above Low counts as moving");
+      // Android engine default is 75 (core/android/.../BGGeoEngine.kt:870). This schema has
+      // no per-platform default mechanism, so one number must serve both — using iOS's 50
+      // here (matches iOS exactly; on Android it's a more permissive threshold than Android's
+      // own 75, trading a slightly higher false-"moving" rate for a lower risk of missing real
+      // movement, consistent with this app's tracking-reliability priority). See the parity
+      // report for the full discussion.
+      {key: 'minimumActivityRecognitionConfidence', label: 'Min AR confidence', type: 'number', unit: '%', default: 50},
       {key: 'disableMotionActivityUpdates', label: 'Disable motion updates', type: 'bool', default: false},
       {key: 'preventSuspend', label: 'Prevent suspend', type: 'bool', default: false, platform: 'ios'},
     ],
@@ -97,8 +108,13 @@ export const CONFIG_SECTIONS: ConfigSection[] = [
       {key: 'autoSyncThreshold', label: 'Auto-sync threshold', type: 'number', default: 0},
       {key: 'disableAutoSyncOnCellular', label: 'Wi-Fi-only auto sync', type: 'bool', default: false, hint: 'explicit Sync still uploads on cellular'},
       {key: 'batchSync', label: 'Batch sync', type: 'bool', default: false},
-      {key: 'maxBatchSize', label: 'Max batch size', type: 'number', default: 50},
-      {key: 'httpTimeoutMs', label: 'HTTP timeout', type: 'number', unit: 'ms', default: 60000},
+      // CORRECTED — engine default -1/unbatched on both platforms (core/ios/Sources/
+      // BGGeoHttpStore.mm:74,183, core/android/.../BGGeoHttpStore.kt:60,198), not 50;
+      // DeviceLink sets 50 once linked, independently of this default.
+      {key: 'maxBatchSize', label: 'Max batch size', type: 'number', default: -1},
+      // CORRECTED — engine default 30000 on both platforms (core/ios/Sources/
+      // BGGeoHttpStore.mm:185, core/android/.../BGGeoHttpStore.kt:199), not 60000.
+      {key: 'httpTimeoutMs', label: 'HTTP timeout', type: 'number', unit: 'ms', default: 30000},
     ],
   },
   {

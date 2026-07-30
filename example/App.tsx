@@ -23,6 +23,18 @@ import MapIcon from './src/assets/map.svg';
 import TerminalIcon from './src/assets/apple.terminal.svg';
 import GearIcon from './src/assets/gearshape.svg';
 
+/** Redacts an `onAuthorization` event (`{success, accessToken, refreshToken}`,
+ * per the engine's authorization body) down to `success` plus token-presence
+ * booleans, for the Logs screen/bgeo.db//device/logs — none of which should
+ * ever see a live JWT. Exported so it's directly testable. */
+export function redactAuthorizationEvent(event: any): {success: boolean; hasAccessToken: boolean; hasRefreshToken: boolean} {
+  return {
+    success: Boolean(event?.success),
+    hasAccessToken: Boolean(event?.accessToken),
+    hasRefreshToken: Boolean(event?.refreshToken),
+  };
+}
+
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -106,7 +118,11 @@ export default function App(): React.JSX.Element {
         logEvent('onProviderChange', `status=${event?.status}`, event, 'warn');
       }),
       BackgroundGeolocation.onAuthorization((event: any) => {
-        logEvent('onAuthorization', event?.success ? 'refreshed' : 'failed', event,
+        // The raw event is `{success, accessToken, refreshToken}` — live JWTs.
+        // redactAuthorizationEvent strips them to a token-presence signal before
+        // this goes anywhere near the Logs screen/bgeo.db//device/logs; the real
+        // event (with the real tokens) still goes to persistRotatedTokens below.
+        logEvent('onAuthorization', event?.success ? 'refreshed' : 'failed', redactAuthorizationEvent(event),
           event?.success ? 'info' : 'error');
         void persistRotatedTokens(event?.response ?? event);
       }),

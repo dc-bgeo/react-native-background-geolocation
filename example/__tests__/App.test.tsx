@@ -78,10 +78,28 @@ jest.mock('@react-native-community/datetimepicker', () => ({
   DateTimePickerAndroid: {open: jest.fn()},
 }));
 
-import App from '../App';
+import App, {redactAuthorizationEvent} from '../App';
 
 test('renders correctly', async () => {
   await ReactTestRenderer.act(() => {
     ReactTestRenderer.create(<App />);
   });
+});
+
+// onAuthorization's raw event is `{success, accessToken, refreshToken}` — live
+// JWTs. This must never reach the Logs screen/bgeo.db//device/logs verbatim.
+test('redactAuthorizationEvent strips token values from the logged payload', () => {
+  const redacted = redactAuthorizationEvent({
+    success: true,
+    accessToken: 'ACCESS.SECRET.JWT',
+    refreshToken: 'REFRESH_SECRET',
+  });
+
+  expect(redacted).toEqual({success: true, hasAccessToken: true, hasRefreshToken: true});
+  expect(JSON.stringify(redacted)).not.toMatch(/ACCESS\.SECRET\.JWT|REFRESH_SECRET/);
+});
+
+test('redactAuthorizationEvent reports false token presence when absent', () => {
+  const redacted = redactAuthorizationEvent({success: false});
+  expect(redacted).toEqual({success: false, hasAccessToken: false, hasRefreshToken: false});
 });
