@@ -186,7 +186,7 @@ export interface Config {
   /** Ignore motion-activity updates (motion machine falls back to speed + stationary geofence). Default false. */
   disableMotionActivityUpdates?: boolean;
   stopTimeout?: number;
-  /** @platform ios Show the blue background-location indicator. No-op on Android. */
+  /** @platform ios Show the blue background-location pill under Always auth. false + Always also skips the session engine's CLBackgroundActivitySession to hide the pill (beta — needs field tests). No-op on Android. */
   showsBackgroundLocationIndicator?: boolean;
   stationaryRadius?: number;
   /** @platform ios Low-power continuous wake distance; independent of the larger region radius. No-op on Android. */
