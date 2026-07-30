@@ -103,7 +103,12 @@ export async function persistRotatedTokens(event: any): Promise<void> {
 
 export async function unlinkDevice(): Promise<void> {
   await AsyncStorage.removeItem(KEY);
-  await BackgroundGeolocation.setConfig({url: '', authorization: undefined});
+  // logUrl clears the same way as url (both tolerate the empty-string
+  // convention at the engine — see BGGeoHttpStore's `.ifEmpty { null }`/
+  // `.length == 0` handling on both platforms), otherwise the engine keeps
+  // POSTing this device's logs to the server it just unlinked from, now with
+  // the auth block stripped.
+  await BackgroundGeolocation.setConfig({url: '', logUrl: '', authorization: undefined});
   appStore.setLink({linked: false, deviceId: null});
 }
 
