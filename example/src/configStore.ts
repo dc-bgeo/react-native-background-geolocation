@@ -2,9 +2,10 @@
  * are applied immediately via setConfig and merged over BASE_CONFIG at boot. */
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {Platform} from 'react-native';
 import BackgroundGeolocation from '@dc-bgeo/react-native-background-geolocation';
 
-import {CONFIG_SECTIONS, defaultFor} from './configSchema';
+import {appliesToPlatform, CONFIG_SECTIONS, defaultFor, fieldFor} from './configSchema';
 
 const KEY = 'bgeo:configOverrides';
 
@@ -53,10 +54,21 @@ export async function applyOverride(key: string, value: unknown): Promise<void> 
   await AsyncStorage.setItem(KEY, JSON.stringify(overrides));
 }
 
-/** Drop all overrides and re-apply the defaults for every overridden key. */
-export async function resetOverrides(): Promise<void> {
+/** Drop all overrides and re-apply the defaults for every overridden key.
+ * Keys tagged for the OTHER platform are skipped — the engine that's about
+ * to receive this setConfig call ignores them anyway (they can only be in
+ * `overrides` from before a field was hidden, since the Settings screen
+ * itself won't let this platform set one going forward), and pushing them
+ * would just be noise in the log the console exists to display. `os`
+ * defaults to the running platform; tests pass it explicitly. */
+export async function resetOverrides(
+  os: 'ios' | 'android' = Platform.OS as 'ios' | 'android',
+): Promise<void> {
   const overrides = await loadOverrides();
-  const keys = Object.keys(overrides);
+  const keys = Object.keys(overrides).filter(key => {
+    const field = fieldFor(key);
+    return !field || appliesToPlatform(field, os);
+  });
   if (keys.length > 0) {
     const defaults: Record<string, unknown> = {};
     for (const key of keys) {

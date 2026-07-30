@@ -2,7 +2,13 @@
  * @format
  */
 
-import {CONFIG_SECTIONS, resolveDefault, type ConfigField} from '../src/configSchema';
+import {
+  appliesToPlatform,
+  CONFIG_SECTIONS,
+  fieldsForPlatform,
+  resolveDefault,
+  type ConfigField,
+} from '../src/configSchema';
 
 function fieldDefault(key: string): ConfigField['default'] {
   for (const section of CONFIG_SECTIONS) {
@@ -56,5 +62,36 @@ describe('resolveDefault', () => {
     expect(resolveDefault(false, 'android')).toBe(false);
     expect(resolveDefault(null, 'ios')).toBe(null);
     expect(resolveDefault(null, 'android')).toBe(null);
+  });
+});
+
+describe('appliesToPlatform / fieldsForPlatform', () => {
+  test('an unmarked field applies to both platforms', () => {
+    const field: Pick<ConfigField, 'platform'> = {};
+    expect(appliesToPlatform(field, 'ios')).toBe(true);
+    expect(appliesToPlatform(field, 'android')).toBe(true);
+  });
+
+  test('a platform-tagged field applies only to its own platform', () => {
+    const iosOnly: Pick<ConfigField, 'platform'> = {platform: 'ios'};
+    expect(appliesToPlatform(iosOnly, 'ios')).toBe(true);
+    expect(appliesToPlatform(iosOnly, 'android')).toBe(false);
+  });
+
+  // Regression guard for the recorded defect: these two keys are read only
+  // by the iOS engine (core/ios/Sources/BGGeoEngine.mm:1466/:1827 and :848)
+  // and are absent from core/android/engine entirely, so the Settings screen
+  // must not offer them on Android.
+  test('stationaryDistanceFilter and diagnosticExtras are iOS-only in the resolved field list', () => {
+    const iosFields = fieldsForPlatform('ios').map(f => f.key);
+    const androidFields = fieldsForPlatform('android').map(f => f.key);
+    expect(iosFields).toEqual(expect.arrayContaining(['stationaryDistanceFilter', 'diagnosticExtras']));
+    expect(androidFields).not.toEqual(expect.arrayContaining(['stationaryDistanceFilter']));
+    expect(androidFields).not.toEqual(expect.arrayContaining(['diagnosticExtras']));
+  });
+
+  test('an unmarked field (distanceFilter) is present in the resolved field list on both platforms', () => {
+    expect(fieldsForPlatform('ios').map(f => f.key)).toEqual(expect.arrayContaining(['distanceFilter']));
+    expect(fieldsForPlatform('android').map(f => f.key)).toEqual(expect.arrayContaining(['distanceFilter']));
   });
 });

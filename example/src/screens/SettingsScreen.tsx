@@ -4,7 +4,6 @@
 
 import React, {useCallback, useEffect, useState} from 'react';
 import {
-  Platform,
   TouchableOpacity,
   ScrollView,
   Switch,
@@ -16,7 +15,7 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import BackgroundGeolocation from '@dc-bgeo/react-native-background-geolocation';
 
 import {appStore} from '../appStore';
-import {CONFIG_SECTIONS, resolveDefault, type ConfigField} from '../configSchema';
+import {appliesToPlatform, CONFIG_SECTIONS, resolveDefault, type ConfigField} from '../configSchema';
 import {applyOverride, loadOverrides, resetOverrides} from '../configStore';
 import {linkDevice, unlinkDevice} from '../deviceLink';
 import {logEvent} from '../logUploader';
@@ -71,9 +70,7 @@ export function SettingsScreen() {
         <LinkSection linked={link.linked} deviceId={link.deviceId} serverUrl={link.serverUrl} />
         <AppearanceSection />
         {CONFIG_SECTIONS.map(section => {
-          const fields = section.fields.filter(
-            f => !f.platform || f.platform === Platform.OS,
-          );
+          const fields = section.fields.filter(f => appliesToPlatform(f));
           if (fields.length === 0) return null;
           return (
             <View key={section.title} style={styles.section}>

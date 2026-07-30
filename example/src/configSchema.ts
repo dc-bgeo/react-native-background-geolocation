@@ -40,6 +40,18 @@ export function resolveDefault(
   return isPlatformDefault(value) ? value[os] : value;
 }
 
+/** Whether `field` applies to `os` (defaults to the running platform). A
+ * field with no `platform` tag applies to both — same "common case needs no
+ * tag" rule `resolveDefault` uses for values. `os` is an explicit parameter
+ * for the same reason: pure, unit-testable for both platforms without
+ * mocking react-native's `Platform`. */
+export function appliesToPlatform(
+  field: Pick<ConfigField, 'platform'>,
+  os: 'ios' | 'android' = Platform.OS as 'ios' | 'android',
+): boolean {
+  return !field.platform || field.platform === os;
+}
+
 export type ConfigSection = {title: string; fields: ConfigField[]};
 
 /** Base config the example app passes to ready() (before user overrides). */
@@ -77,7 +89,11 @@ export const CONFIG_SECTIONS: ConfigSection[] = [
       // CORRECTED — engine default 200 on both platforms (core/ios/Sources/BGGeoEngine.mm:809,
       // core/android/.../BGGeoEngine.kt:636), not 25.
       {key: 'stationaryRadius', label: 'Stationary radius', type: 'number', unit: 'm', default: 200},
-      {key: 'stationaryDistanceFilter', label: 'Stationary distance filter', type: 'number', unit: 'm', default: 75},
+      // iOS-only: read by the session engine's stationary distance gate
+      // (core/ios/Sources/BGGeoEngine.mm:1466, :1827). Zero occurrences under
+      // core/android/engine — a no-op on Android (already doc-tagged
+      // `@platform ios` on both SDKs' Config types).
+      {key: 'stationaryDistanceFilter', label: 'Stationary distance filter', type: 'number', unit: 'm', default: 75, platform: 'ios'},
       {key: 'stationaryDesiredAccuracy', label: 'Stationary accuracy', type: 'enum', options: STATIONARY_ACCURACY_OPTIONS, default: 'BALANCED'},
       {key: 'stationaryKeepAlive', label: 'Stationary keep-alive', type: 'bool', default: true},
       {key: 'locationUpdateInterval', label: 'Moving interval', type: 'number', unit: 'ms', default: 1000, platform: 'android'},
@@ -178,7 +194,12 @@ export const CONFIG_SECTIONS: ConfigSection[] = [
         default: 3,
         hint: 'native log persistence (mirror to logcat/os_log is always on)',
       },
-      {key: 'diagnosticExtras', label: 'Diagnostic extras', type: 'bool', default: false},
+      // iOS-only: gates the per-point diagnostic snapshot
+      // (core/ios/Sources/BGGeoEngine.mm:848). Zero occurrences under
+      // core/android/engine — a no-op on Android today (not doc-tagged
+      // `@platform ios` on either SDK's Config, since Android support is on
+      // the backlog; re-evaluate this tag if/when that ships).
+      {key: 'diagnosticExtras', label: 'Diagnostic extras', type: 'bool', default: false, platform: 'ios'},
       {key: 'useSessionEngine', label: 'Session engine', type: 'bool', default: true, platform: 'ios', hint: 'OFF = legacy CLLocationManager (SLC-burst degraded in background)'},
     ],
   },
@@ -209,15 +230,32 @@ export const CONFIG_SECTIONS: ConfigSection[] = [
   },
 ];
 
+/** The schema field for `key`, searching every section. */
+export function fieldFor(key: string): ConfigField | undefined {
+  for (const section of CONFIG_SECTIONS) {
+    const field = section.fields.find(f => f.key === key);
+    if (field) return field;
+  }
+  return undefined;
+}
+
+/** Every schema field (flattened across sections) that applies to `os` —
+ * what the Settings screen renders and what `resetOverrides` is allowed to
+ * touch. */
+export function fieldsForPlatform(
+  os: 'ios' | 'android' = Platform.OS as 'ios' | 'android',
+): ConfigField[] {
+  return CONFIG_SECTIONS.flatMap(section => section.fields).filter(field =>
+    appliesToPlatform(field, os),
+  );
+}
+
 /** default value per key (BASE_CONFIG wins over the schema's, possibly
  * per-platform, default). */
 export function defaultFor(key: string): unknown {
   if (key in BASE_CONFIG) {
     return (BASE_CONFIG as Record<string, unknown>)[key];
   }
-  for (const section of CONFIG_SECTIONS) {
-    const field = section.fields.find(f => f.key === key);
-    if (field) return resolveDefault(field.default);
-  }
-  return undefined;
+  const field = fieldFor(key);
+  return field ? resolveDefault(field.default) : undefined;
 }

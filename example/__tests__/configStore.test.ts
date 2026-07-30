@@ -74,9 +74,41 @@ test('applyOverride on a sibling dot-path key preserves earlier dot-path overrid
 
 test('resetOverrides on a dot-path key resets the full default nested object', async () => {
   await applyOverride('notification.title', 'X');
-  await resetOverrides();
+  // notification.* fields are platform: 'android' — pass it explicitly so
+  // this test doesn't depend on Jest's RN preset default for Platform.OS.
+  await resetOverrides('android');
   expect(BackgroundGeolocation.setConfig).toHaveBeenLastCalledWith({
     notification: DEFAULT_NOTIFICATION,
+  });
+  expect(await loadOverrides()).toEqual({});
+});
+
+// Regression guard: stationaryDistanceFilter is iOS-only (platform: 'ios' in
+// configSchema.ts). A value stuck in storage from before that tag existed
+// (or from a shared-backup edge case) must not be re-pushed to the Android
+// engine on reset — that would be a no-op push logged as noise.
+test('resetOverrides on Android skips an iOS-only key even if one is stored, and still clears it', async () => {
+  await applyOverride('distanceFilter', 30);
+  const overrides = await loadOverrides();
+  overrides.stationaryDistanceFilter = 999; // simulate a stale/pre-existing override
+  await AsyncStorage.setItem('bgeo:configOverrides', JSON.stringify(overrides));
+
+  await resetOverrides('android');
+
+  expect(BackgroundGeolocation.setConfig).toHaveBeenLastCalledWith({
+    distanceFilter: BASE_CONFIG.distanceFilter,
+  });
+  expect(await loadOverrides()).toEqual({});
+});
+
+test('resetOverrides on iOS restores an iOS-only key', async () => {
+  const overrides = {stationaryDistanceFilter: 999};
+  await AsyncStorage.setItem('bgeo:configOverrides', JSON.stringify(overrides));
+
+  await resetOverrides('ios');
+
+  expect(BackgroundGeolocation.setConfig).toHaveBeenLastCalledWith({
+    stationaryDistanceFilter: 75,
   });
   expect(await loadOverrides()).toEqual({});
 });
