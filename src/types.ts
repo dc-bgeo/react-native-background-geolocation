@@ -84,7 +84,9 @@ export interface State {
   enabled: boolean;
   trackingActive?: boolean;
   authorization?: number;
+  /** Seconds since the last raw fix (before filtering); null until one arrives. */
   lastRawFixAge?: number | null;
+  /** Seconds since the last accepted fix (after filtering); null until one arrives. */
   lastAcceptedFixAge?: number | null;
   lastLocationError?: string | null;
   locationFailureCount?: number;
