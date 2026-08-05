@@ -153,7 +153,24 @@ export function MapScreen() {
     setFollow(true);
   }, [last]);
 
-  const markerPoints = layers.markers ? view : [];
+  // Keyed here, not at the call site, and deliberately WITHOUT the array
+  // index: React reconciles markers by key, so an index-derived key changes
+  // for every point in the window the moment the window slides (a new fix past
+  // PAGE_SIZE, or the 2000-point cap evicting the head) and React unmounts and
+  // remounts the entire track — the same wholesale-rebuild defect iOS and
+  // Android each shipped in their own renderer. `uuid ?? timestamp` is stable
+  // across a slide; neither is guaranteed unique, so a repeat takes an
+  // occurrence suffix rather than colliding into one (duplicate React keys
+  // drop siblings).
+  const markerPoints = useMemo(() => {
+    if (!layers.markers) return [];
+    const seen: Record<string, number> = {};
+    return view.map(point => {
+      const base = point.uuid ?? point.timestamp;
+      const occurrence = (seen[base] = (seen[base] ?? 0) + 1);
+      return {point, key: occurrence === 1 ? base : `${base}#${occurrence}`};
+    });
+  }, [layers.markers, view]);
 
   // Latest geofence transition per region in the window — the region (circle,
   // pin) and its event dot take the action's color; regions that did not fire
@@ -206,13 +223,13 @@ export function MapScreen() {
         {layers.polylines && view.length > 1 && (
           <Polyline coordinates={view} strokeColor="#3A6FF0" strokeWidth={3} />
         )}
-        {markerPoints.map((p, i) => (
-          <DotMarker key={p.uuid ?? `${p.timestamp}-${i}`} coordinate={p}>
+        {markerPoints.map(({point, key}) => (
+          <DotMarker key={key} coordinate={point}>
             <View style={styles.dot} />
           </DotMarker>
         ))}
-        {geofenceEvents.map(({point: p, color}, i) => (
-          <DotMarker key={`gf-${p.uuid ?? i}`} coordinate={p} redrawKey={color}>
+        {geofenceEvents.map(({point: p, color}) => (
+          <DotMarker key={`gf-${p.uuid ?? p.timestamp}`} coordinate={p} redrawKey={color}>
             <View
               style={[styles.geofenceEventDot, {borderColor: color, backgroundColor: `${color}66`}]}
             />
