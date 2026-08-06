@@ -1,5 +1,8 @@
 # @dc-bgeo/react-native-background-geolocation
 
+[![downloads](https://img.shields.io/npm/dm/@dc-bgeo/react-native-background-geolocation?label=downloads&color=success)](https://www.npmjs.com/package/@dc-bgeo/react-native-background-geolocation)
+[![npm](https://img.shields.io/npm/v/@dc-bgeo/react-native-background-geolocation?label=npm&color=blue)](https://www.npmjs.com/package/@dc-bgeo/react-native-background-geolocation)
+
 **Background geolocation for React Native & Expo that keeps tracking when the app is
 backgrounded, killed, force-quit, or rebooted.** iOS & Android, New Architecture
 (TurboModule), with a native offline queue and HTTP uploader — no JavaScript
