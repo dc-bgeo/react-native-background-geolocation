@@ -186,6 +186,9 @@ certificate. In a **release** build an invalid/expired/mismatched key makes
 LICENSE_EXPIRED | LICENSE_APP_MISMATCH`; debuggable builds and the iOS simulator
 never produce these codes — they run unlicensed (evaluation) whatever the key
 state, so a key bound to your release signing cert can't block development.
+Since v0.4.12 a rejected release build also shows a persistent red banner at
+the bottom of the screen with the error code and app id, so a bad key can't
+slip through release testing unnoticed.
 
 Set the key in the manifest — the same mechanism for RN/native/Flutter, read at
 launch before JS runs (there is no config option):
