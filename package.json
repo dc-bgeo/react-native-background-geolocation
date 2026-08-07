@@ -32,7 +32,8 @@
     "RNBackgroundGeolocation.podspec",
     "react-native.config.js",
     "app.plugin.js",
-    "LICENSE.md",
+    "LICENSE",
+    "LICENSE-BINARY.md",
     "README.md",
     "!**/__tests__",
     "!**/.gradle",
@@ -74,7 +75,7 @@
       ]
     ]
   },
-  "license": "SEE LICENSE IN LICENSE.md",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/dc-bgeo/react-native-background-geolocation.git"

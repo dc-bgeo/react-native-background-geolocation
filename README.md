@@ -227,9 +227,10 @@ See [`src/types.ts`](./src/types.ts) for the full `Config` reference.
 
 ## License
 
-Dual-licensed, see [LICENSE.md](./LICENSE.md):
+The bridge (everything in `src`, `lib`, `android/src`, the podspec and gradle
+glue) is **MIT** — see [`LICENSE`](./LICENSE).
 
-- **Bridge** — MIT © BGeo (`src`, `lib`, `android/src`, `ios/RNBackgroundGeolocation.{h,mm}`,
-  podspec, gradle glue).
-- **Engine binaries** — proprietary (`ios/BGeoCore.xcframework`, the
-  `dev.bgeo:bgeo-android` AAR); a license key is required in release builds.
+The precompiled engine (`ios/BGeoCore.xcframework`, the `dev.bgeo:bgeo-android`
+AAR) is **proprietary** and requires a license key in release builds — see
+[`LICENSE-BINARY.md`](./LICENSE-BINARY.md). Debug builds and the iOS simulator
+run without a key.

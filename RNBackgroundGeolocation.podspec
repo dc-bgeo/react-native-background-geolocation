@@ -8,9 +8,9 @@ Pod::Spec.new do |s|
   s.summary      = package["description"]
   s.description  = package["description"]
   s.homepage     = "https://bgeo.dev/"
-  # Dual: the bridge sources here are MIT, the vendored BGeoCore.xcframework is
-  # proprietary. Both parts are spelled out in LICENSE.md.
-  s.license      = { :type => "Commercial", :file => "LICENSE.md" }
+  # Dual: the bridge sources here are MIT (see LICENSE), the vendored
+  # BGeoCore.xcframework is proprietary (see LICENSE-BINARY.md).
+  s.license      = { :type => "MIT (bridge) / Commercial (engine binary)", :file => "LICENSE-BINARY.md" }
   s.authors      = { "tracker" => "dmitry.chistik@gmail.com" }
   s.platforms    = { :ios => "15.5" }
   s.source       = { :path => "." }
